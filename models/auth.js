@@ -8,16 +8,6 @@ const userSchema = mongoose.Schema(
         about: { type: String },
         tags: { type: [String] },
         joinedOn: { type: Date, default: Date.now },
-
-
-        loginDetails: [
-            {
-                ipAddress: String,
-                devices: String,
-                loggedOn: { type: Date, default: Date.now },
-            },
-        ]
-
     },
 );
 

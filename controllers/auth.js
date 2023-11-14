@@ -29,8 +29,7 @@ export const signup = async (req, res) => {
 };
 
 export const login = async (req, res) => {
-    const { id: _id } = req.params;
-    const { email, password, ipAddress, devices } = req.body;
+    const { email, password } = req.body;
     try {
         const existingUser = await users.findOne({ email });
         if (!existingUser) {
@@ -51,28 +50,8 @@ export const login = async (req, res) => {
             process.env.JWT_SECRET,
             { expiresIn: "1h" }
         );
-
-        try {
-            const updateLoginDetails = await users.findByIdAndUpdate(_id, {
-                $addToSet: { 'loginDetails': [{ ipAddress, devices }] },
-            });
-            res.status(200).json(updateLoginDetails);
-        } catch (error) {
-            res.status(400).json({ message: error.message });
-        }
-
         res.status(200).json({ result: existingUser, token });
     } catch (error) {
         res.status(500).json({ message: "Something went wrong..." });
     }
 };
-
-const updateNoOfLogin = async (_id, noOfLogin) => {
-    try {
-        await users.findByIdAndUpdate(_id, {
-            $set: { 'noOfLogin': noOfLogin },
-        });
-    } catch (error) {
-        console.log(error);
-    }
-}
